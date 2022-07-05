@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration name="thousandPaws-Main" status="INFO">
+	<ThresholdFilter level="INFO" />
+
+	<Appenders>
+		<!-- Console Appender -->
+		<Console name="Console" target="SYSTEM_OUT"
+			ignoreExceptions="false">
+			<PatternLayout
+				pattern="%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd
+			HH:mm:ss.SSS}} %highlight{${LOG_LEVEL_PATTERN:-%5p}}{FATAL=Blink red,
+			ERROR=red,
+			WARN=Bright yellow, INFO=green, DEBUG=Bright green,
+			TRACE=blue}
+			%style{${sys:PID}}{magenta}
+			[%15.15t]
+			%style{%-40.40C{1.}}{cyan} :
+			${LOG_EXCEPTION_CONVERSION_WORD:-%msg%n%xEx}" />
+			<ThresholdFilter level="DEBUG" />
+		</Console>
+
+		<RollingFile name="RollingFile" bufferedIO="true"
+			fileName="logs/thousandPaws.log"
+			filePattern="logs/archives/thousandPaws-%d{dd-MM-yy}-%i.log.gz"
+			ignoreExceptions="false">
+			<PatternLayout>
+				<pattern>%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}}
+					[%-5p] [%t] %C{1} - %msg%n%xEx</pattern>
+			</PatternLayout>
+			<Policies>
+				<!-- rollover on startup, daily and when the file reaches 10 MegaBytes -->
+				<OnStartupTriggeringPolicy />
+				<SizeBasedTriggeringPolicy size="10 MB" />
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+			<DefaultRolloverStrategy max="5" />
+		</RollingFile>
+
+	</Appenders>
+
+	<Loggers>
+
+		<!-- LOG "com.octeria*" at TRACE level -->
+		<Logger name="com.octeria*" additivity="false" level="DEBUG">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="RollingFile" />
+		</Logger>
+
+		<!-- LOG everything at INFO level -->
+		<Root level="INFO">
+			<AppenderRef ref="Console" />
+			<AppenderRef ref="RollingFile" />
+		</Root>
+
+	</Loggers>
+
+</Configuration>
